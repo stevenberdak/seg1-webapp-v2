@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SEG1 Chat App</title>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="../js/browse-chatrooms.js"></script>
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li><a href="/"><img src="/images/splash-logo.jpg" class="navlogo" /></a></li>
+      <li><a href="/create-chatroom.html">Create Channel</a></li>
+      <li><a href="/browse-chatrooms.html">Browse Chatrooms</a></li>
+      <li style="margin-left: auto"><a href="Sign-In">Sign-In</a></li>
+    </ul>
+  </nav>
+  <main>
+    <div class="flex flex-row items-center justify-center w-full h-screen items-start divide-x divide-gray-300">
+      <div class="flex flex-col basis-2/10 w-full h-full pt-24 pl-12">
+        <h2 class="text-lg font-medium">Chat</h2>
+        <br />
+        <h3>Discover</h3>
+        <div>
+          <a class="flex flex-row" href="/browse-chatrooms">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            <p>Browse Chatrooms</p>
+          </a>
+        </div>
+        <div>
+          <a class="flex flex-row" href="/create-chatroom">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <p>Create Chatroom</p>
+          </a>
+        </div>
+      </div>
+      <div class="flex flex-row flex-wrap basis-8/10 w-full h-screen justify-start gap-8 pt-24 pb-12 px-12" id="chatroom-list-box">
+
+      </div>
+    </div>
+  </main>
+  <script>listChatrooms()</script>
+</body>
+
+</html>
