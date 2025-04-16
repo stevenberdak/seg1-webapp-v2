@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import java.time.LocalDateTime;
 
 @Controller
-public class ChatController {
+public class ChatroomController {
 
     //handles sent messages
     @MessageMapping("/chat.sendMessage")

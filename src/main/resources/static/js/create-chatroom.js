@@ -3,11 +3,20 @@ function createChatroom() {
     const headerBox = document.getElementById("header-input")
     const descriptionBox = document.getElementById("description-input")
 
-    const apiEndpoint = `api/chatroom/create?title=${titleBox.value}&header=${headerBox.value}&description=${descriptionBox.value}`
-
-    fetch(apiEndpoint).then(response => {
-        return response.text()
-    })
+    fetch("api/chatrooms",
+        {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: titleBox.value,
+                header: headerBox.value,
+                description: descriptionBox.value
+            })
+        }).then(response => {
+            return response.text()
+        })
         .then(text => {
             alert(text)
         })
