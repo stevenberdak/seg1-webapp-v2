@@ -1,4 +1,5 @@
-package com.chatapp.model;
+package com.seg1.webapp.websocket.model;
+
 import java.time.LocalDateTime;
 
 public class ChatMessage {

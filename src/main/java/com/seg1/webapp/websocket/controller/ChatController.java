@@ -1,6 +1,7 @@
 package com.seg1.webapp.websocket.controller;
 
-import com.chatapp.model.ChatMessage;
+import com.seg1.webapp.websocket.model.ChatMessage;
+
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
