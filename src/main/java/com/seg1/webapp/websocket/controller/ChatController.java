@@ -1,4 +1,4 @@
-package com.chatapp.controller;
+package com.seg1.webapp.websocket.controller;
 
 import com.chatapp.model.ChatMessage;
 import org.springframework.messaging.handler.annotation.*;
