@@ -7,6 +7,8 @@
     <title>Chatroom</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
     <link rel="stylesheet" href="../css/styles.css" />
     <script src="../app/js/chatroom.js" defer></script>
@@ -16,20 +18,22 @@
 
     <nav class="bg-gray-300 p-4 flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <a href="/"><img src="/images/splash-logo.jpg" alt="Logo" class="h-10" /></a>
-          <a href="/app/create-chatroom.html" class="text-purple-800 font-semibold">Create Channel</a>
-          <a href="/app/browse-chatrooms.html" class="text-purple-800 font-semibold">Browse Chatrooms</a>
+            <a href="/"><img src="/images/splash-logo.jpg" alt="Logo" class="h-10" /></a>
+            <a href="/app/create-chatroom.html" class="text-purple-800 font-semibold">Create Channel</a>
+            <a href="/app/browse-chatrooms.html" class="text-purple-800 font-semibold">Browse Chatrooms</a>
         </div>
         <div>
-          <a href="/sign-in.html" class="text-blue-700 font-semibold">Sign-In</a>
-          <a href="/sign-up.html" class="text-blue-700 font-semibold">Sign-Up</a>
+            <a href="/sign-in.html" class="text-blue-700 font-semibold">Sign-In</a>
+            <a href="/sign-up.html" class="text-blue-700 font-semibold">Sign-Up</a>
         </div>
-      </nav>
+    </nav>
 
     <main>
         <div class="flex flex-col items-center justify-center min-h-screen px-4 space-y-4">
             <header class="text-center mt-20">
                 <h1 id="chatroom-title" class="text-3xl font-bold mb-2"></h1>
+                <h2 id="chatroom-header" class="text-2xl font-bold mb-2"></h2>
+                <h3 id="chatroom-description"></h3>
             </header>
 
             <section id="message-container" class="w-full h-full flex-1 bg-white rounded shadow p-6 space-y-4">

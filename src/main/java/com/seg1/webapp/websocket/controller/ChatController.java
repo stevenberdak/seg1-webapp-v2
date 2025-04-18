@@ -23,7 +23,15 @@ public class ChatController {
     // Handles when a user joins and stores their username
     @MessageMapping("/chat.addUser")
     public void addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        // Store username in session attributes
         headerAccessor.getSessionAttributes().put("username", chatMessage.getUsername());
-        messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
+        headerAccessor.getSessionAttributes().put("room_id", chatMessage.getRoomId());
+
+        // Broadcast the message
+        try {
+            messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

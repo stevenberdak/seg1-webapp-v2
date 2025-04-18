@@ -3,7 +3,7 @@ function createChatroom() {
     const headerBox = document.getElementById("header-input")
     const descriptionBox = document.getElementById("description-input")
 
-    fetch("api/chatrooms",
+    fetch("/api/chatrooms",
         {
             method: "POST",
             headers: {
@@ -17,14 +17,21 @@ function createChatroom() {
         }).then(async response => {
             const json = await response.json()
 
-            if (response.status !== 200) {
-                throw new Error(`${json.status} ${json.message}`)
+            if (!response.ok) {
+                const errorMessage = json?.message || `HTTP error ${response.status}`;
+                throw new Error(errorMessage);
             } else {
-                window.location.replace("/chatroom.html?title=" + titleBox.value)
+                const urlParams = new URLSearchParams({
+                    roomId: json.id,
+                    title: json.title,
+                    header: json.header || '',
+                    description: json.description || ''
+                });
+                window.location.replace(`/app/chatroom.html?${urlParams.toString()}`);
             }
         })
         .catch(err => {
-            alert(`Error: ${err}`)
+            console.error(err)
         })
 }
 
