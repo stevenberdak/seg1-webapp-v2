@@ -9,25 +9,28 @@
   <link rel="stylesheet" href="./css/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script src="../js/index.js"></script>
+  <script src="../app/js/browse-chatrooms.js"></script>
 </head>
 
 <body>
   <nav class="bg-gray-300 p-4 flex items-center justify-between">
     <div class="flex items-center space-x-4">
       <a href="/"><img src="/images/splash-logo.jpg" alt="Logo" class="h-10" /></a>
+      <a href="/app/create-chatroom.html" class="text-purple-800 font-semibold">Create Channel</a>
+      <a href="/app/browse-chatrooms.html" class="text-purple-800 font-semibold">Browse Chatrooms</a>
     </div>
     <div>
-      <a href="/sign-in.html" class="text-blue-700 font-semibold">Sign-In</a>
-      <a href="/sign-up.html" class="text-blue-700 font-semibold">Sign-Up</a>
+      <p id="username-display" class="text-gray-700 font-semibold">Username</p>
     </div>
   </nav>
   <main>
-    <div class="flex flex-col items-center justify-center w-full h-screen">
-      <h1 class="text-3xl font-bold">Welcome to ChatApp!</h1>
-      <h2>Create or join a chat room to get started...</h2>
+    <div class="flex flex-row items-center justify-center w-full h-screen items-start divide-x divide-gray-300">
+      <div class="flex flex-row flex-wrap w-full h-screen justify-start gap-8 pt-24 pb-12 px-12" id="chatroom-list-box">
+
+      </div>
     </div>
   </main>
+  <script>listChatrooms()</script>
 </body>
 
 </html>

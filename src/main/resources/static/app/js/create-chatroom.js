@@ -14,11 +14,14 @@ function createChatroom() {
                 header: headerBox.value,
                 description: descriptionBox.value
             })
-        }).then(response => {
-            return response.text()
-        })
-        .then(text => {
-            alert(text)
+        }).then(async response => {
+            const json = await response.json()
+
+            if (response.status !== 200) {
+                throw new Error(`${json.status} ${json.message}`)
+            } else {
+                window.location.replace("/chatroom.html?title=" + titleBox.value)
+            }
         })
         .catch(err => {
             alert(`Error: ${err}`)

@@ -15,8 +15,11 @@ public class User {
     @CreationTimestamp
     private LocalDateTime created_at;
 
+    @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String passwordHash;
 
     public Long getId() {

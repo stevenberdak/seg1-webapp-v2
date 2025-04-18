@@ -5,6 +5,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.seg1.webapp.api.entity.Chatroom;
 import com.seg1.webapp.api.repository.ChatroomRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 
 
@@ -33,7 +36,11 @@ public class ApiChatroomController {
 
     @PostMapping
     public Chatroom create(@RequestBody Chatroom chatroom) {
-        return repo.save(chatroom);
+        try {
+            return repo.save(chatroom);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Chatroom with the given name already exists", e);
+        }
     }
 
     @DeleteMapping("/{id}")

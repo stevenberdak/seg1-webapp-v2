@@ -9,35 +9,44 @@
   <link rel="stylesheet" href="./css/styles.css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script src="../js/create-chatroom.js"></script>
+  <script src="../js/sign-in.js"></script>
 </head>
 
 <body>
-  <nav>
-    <ul>
-      <li><a href="/"><img src="/images/splash-logo.jpg" class="navlogo" /></a></li>
-      <li><a href="/create-chatroom.html">Create Channel</a></li>
-      <li><a href="/browse-chatrooms.html">Browse Chatrooms</a></li>
-      <li style="margin-left: auto"><a href="Sign-In">Sign-In</a></li>
-    </ul>
+  <nav class="bg-gray-300 p-4 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <a href="/"><img src="/images/splash-logo.jpg" alt="Logo" class="h-10" /></a>
+    </div>
+    <div>
+      <a href="/sign-in.html" class="text-blue-700 font-semibold">Sign-In</a>
+      <a href="/sign-up.html" class="text-blue-700 font-semibold">Sign-Up</a>
+    </div>
   </nav>
   <main>
     <div class="flex flex-col items-center justify-center w-full h-screen">
       <h1>Sign In</h1>
       <h2>Enter User Details:</h2>
-      <form action="javascript:createChatroom();">
-        <label for="title">User Name:</label>
-        <input type="text" id="title-input" name="title"
+      <form action="/sign-in.html" method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="title-input" name="username" autocomplete="username" required
           class="block rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-          placeholder="Title">
+          placeholder="Username">
         <br><br>
-        <label for="header">Password:</label>
-        <input type="text" id="header-input" name="header"
+        <label for="password">Password (8 characters minimum)</label>
+        <input type="password" id="password" name="password" minlength="8" autocomplete="current-password" required
           class="block rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-          placeholder="Header"><br><br>
-        <input type="submit" value="Submit"
+          placeholder="Password"><br><br>
+        <input type="submit" value="Sign In"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
       </form>
+      <!-- Error display -->
+      <script>
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('error')) {
+          const error = decodeURIComponent(params.get('error'));
+          document.write('<p style="color:red;">' + error + '</p>');
+        }
+      </script>
     </div>
   </main>
 </body>

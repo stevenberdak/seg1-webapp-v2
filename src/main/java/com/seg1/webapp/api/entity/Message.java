@@ -20,6 +20,7 @@ public class Message {
 
     private Long userId;
     private String content;
+
     public Long getId() {
         return id;
     }
