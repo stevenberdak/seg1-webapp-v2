@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/sign-in.html")
-                        .loginProcessingUrl("/sign-in.html")
+                        .loginProcessingUrl("/sign-in-submit")
                         .defaultSuccessUrl("/app/browse-chatrooms.html")
                         .failureHandler(authenticationFailureHandler())
                         .permitAll())

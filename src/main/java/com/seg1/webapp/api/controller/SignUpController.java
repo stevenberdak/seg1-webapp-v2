@@ -1,17 +1,14 @@
 package com.seg1.webapp.api.controller;
 
-import org.hibernate.type.internal.UserTypeJavaTypeWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.seg1.webapp.api.repository.UserRepository;
 import com.seg1.webapp.api.entity.User;
+import com.seg1.webapp.api.repository.UserRepository;
 
 @Controller
 public class SignUpController {
@@ -20,7 +17,7 @@ public class SignUpController {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @PostMapping("/sign-up-submit.html")
+    @PostMapping("/sign-up-submit")
     public String registerUser(
             @RequestParam String email,
             @RequestParam String username,
