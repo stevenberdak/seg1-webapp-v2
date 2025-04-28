@@ -1,29 +1,31 @@
 package com.seg1.webapp.api.controller;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.seg1.webapp.api.entity.Chatroom;
-import com.seg1.webapp.api.entity.Message;
-import com.seg1.webapp.api.entity.User;
-import com.seg1.webapp.api.repository.MessageRepository;
-import com.seg1.webapp.api.repository.UserRepository;
-import com.seg1.webapp.api.dto.MessageDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.Comparator;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.seg1.webapp.api.dto.ChatroomDto;
+import com.seg1.webapp.api.dto.MessageDto;
+import com.seg1.webapp.api.entity.Chatroom;
+import com.seg1.webapp.api.entity.Message;
+import com.seg1.webapp.api.entity.User;
 import com.seg1.webapp.api.repository.ChatroomRepository;
-import com.seg1.webapp.api.dto.ChatroomListDto;
-import java.util.stream.Collectors;
+import com.seg1.webapp.api.repository.MessageRepository;
+import com.seg1.webapp.api.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
-
-import org.springframework.http.HttpStatus;
-
-
-import java.util.List;
 
 // https://chatgpt.com/c/67fff773-fd30-8010-88dd-bbe7aeb8351c
 
@@ -42,11 +44,11 @@ public class ApiChatroomController {
     }
 
     @GetMapping // Modified method
-    public List<ChatroomListDto> getAll() {
+    public List<ChatroomDto> getAll() {
         List<Chatroom> chatrooms = repo.findAll();
         // Map the entities to DTOs
         return chatrooms.stream()
-                .map(chatroom -> new ChatroomListDto(
+                .map(chatroom -> new ChatroomDto(
                         chatroom.getId(),
                         chatroom.getTitle(),
                         chatroom.getHeader(),

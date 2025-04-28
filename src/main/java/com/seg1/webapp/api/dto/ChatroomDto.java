@@ -1,14 +1,14 @@
 package com.seg1.webapp.api.dto;
 
-public class ChatroomListDto {
+public class ChatroomDto {
     private Long id;
     private String title;
     private String header;
     private String description;
 
-    public ChatroomListDto() {}
+    public ChatroomDto() {}
 
-    public ChatroomListDto(Long id, String title, String header, String description) {
+    public ChatroomDto(Long id, String title, String header, String description) {
         this.id = id;
         this.title = title;
         this.header = header;
