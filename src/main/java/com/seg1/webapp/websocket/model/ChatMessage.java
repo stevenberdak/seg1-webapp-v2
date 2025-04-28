@@ -7,7 +7,7 @@ public class ChatMessage {
     private MessageType type; //chat, join, or leave
     private String username; //username
     private LocalDateTime timestamp; //message timestamp
-    private String roomId;
+    private Long roomId;
 
     public enum MessageType {
         CHAT, JOIN, LEAVE
@@ -26,6 +26,6 @@ public class ChatMessage {
     public LocalDateTime getTimestamp() { return timestamp; } 
     public void setTImestamp(LocalDateTime timestamp) { this.timestamp = timestamp;}
 
-    public String getRoomId() { return roomId; }
-    public void setRoomId(String roomId) { this.roomId = roomId; }
+    public Long getRoomId() { return roomId; }
+    public void setRoomId(Long roomId) { this.roomId = roomId; }
 }

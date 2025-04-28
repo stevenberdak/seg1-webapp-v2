@@ -1,5 +1,5 @@
-function listChatrooms() {
-    const chatroomListBox = document.getElementById("chatroom-list-box")
+function listBrowsableChatrooms() {
+    const chatroomListBox = document.getElementById("chatrooms-list-box")
 
     //    const mock_chatrooms = [
     //        { title: "Love Dogs", header: "Love for Dogs", description: "Talk about your love for your doggo pets!" },
@@ -89,3 +89,13 @@ function listChatrooms() {
             chatroomListBox.textContent = "Failed to load chatrooms.";
         });
 }
+
+function listMyChatrooms() {
+    // need to implement
+}
+
+
+window.addEventListener("DOMContentLoaded", () => {
+    listBrowsableChatrooms();
+    listMyChatrooms();
+});

@@ -2,42 +2,6 @@ let stompClient = null;
 let currentRoomId = null;
 let currentUsername = null;
 
-async function loadMessageHistory() {
-    if (!currentRoomId) return;
-
-    const messageContainer = document.getElementById("message-container");
-    if (!messageContainer) {
-        console.error("Message container not found!");
-        return;
-    }
-    messageContainer.innerHTML = '';
-
-    try {
-        const response = await fetch(`/api/chatrooms/${currentRoomId}/messages`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const history = await response.json();
-
-        history.forEach(message => {
-            // This assumes the DTO has { username: '...', content: '...', timestamp: '...' }
-            showMessage({
-                type: 'CHAT',
-                username: message.username,
-                content: message.content
-            });
-        });
-        console.log("Message history loaded.");
-
-        // Auto-scroll to the bottom after loading history
-        messageContainer.scrollTop = messageContainer.scrollHeight;
-
-    } catch (error) {
-        console.error("Failed to load message history:", error);
-        messageContainer.textContent = "Error loading message history."; // Inform user
-    }
-}
-
 document.addEventListener('DOMContentLoaded', (event) => {
     const params = new URLSearchParams(window.location.search);
     const title = params.get("title");
@@ -87,7 +51,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             if (currentRoomId) {
                 // --- Load history *BEFORE* connecting or just after starting connection ---
                 loadMessageHistory().then(() => {
-                     connect(); // Connect ONLY after getting username AND attempting to load history
+                    connect(); // Connect ONLY after getting username AND attempting to load history
                 });
             } else {
                 console.error("Room ID is missing from URL parameters.");
@@ -113,6 +77,69 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    const sendButton = document.getElementById('send-button');
+    if (sendButton) {
+        sendButton.addEventListener('click', sendMessage);
+    } else {
+        console.error("Send button not found!");
+    }
+
+    const leaveButton = document.getElementById('leave-button');
+    if (leaveButton) {
+        leaveButton.addEventListener('click', leaveChannel);
+    } else {
+        console.error("Leave button not found!");
+    }
+
+    const messageInput = document.getElementById('message-input');
+    if (messageInput) {
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    } else {
+        console.error("Message input not found!");
+    }
+});
+
+async function loadMessageHistory() {
+    if (!currentRoomId) return;
+
+    const messageContainer = document.getElementById("message-container");
+    if (!messageContainer) {
+        console.error("Message container not found!");
+        return;
+    }
+    messageContainer.innerHTML = '';
+
+    try {
+        const response = await fetch(`/api/chatrooms/${currentRoomId}/messages`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const history = await response.json();
+
+        history.forEach(message => {
+            // This assumes the DTO has { username: '...', content: '...', timestamp: '...' }
+            showMessage({
+                type: 'CHAT',
+                username: message.username,
+                content: message.content
+            });
+        });
+        console.log("Message history loaded.");
+
+        // Auto-scroll to the bottom after loading history
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+
+    } catch (error) {
+        console.error("Failed to load message history:", error);
+        messageContainer.textContent = "Error loading message history."; // Inform user
+    }
+}
+
 function connect() {
     if (!currentUsername) {
         console.error("Cannot connect without a username.");
@@ -121,11 +148,18 @@ function connect() {
     const socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function(frame) {
+    stompClient.connect({}, function (frame) {
         // Subscribe to the specific chat room topic
         const subscriptionDestination = '/topic/' + currentRoomId;
-        stompClient.subscribe(subscriptionDestination, function(message) {
+
+        stompClient.subscribe(subscriptionDestination, function (message) {
             showMessage(JSON.parse(message.body));
+            fetchParticipants(currentRoomId)
+        });
+
+        stompClient.subscribe(`/topic/${currentRoomId}/participants`, function (message) {
+            const usernames = JSON.parse(message.body);
+            updateUserList(usernames);
         });
 
         const addUserDestination = "/app/chat.addUser";
@@ -146,7 +180,7 @@ function connect() {
         const messageInput = document.getElementById('message-input');
         if (messageInput) messageInput.disabled = false;
 
-    }, function(error) {
+    }, function (error) {
         console.error('STOMP connection error:', error);
     });
 
@@ -197,22 +231,39 @@ function showMessage(message) {
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    const sendButton = document.getElementById('send-button');
-    if (sendButton) {
-        sendButton.addEventListener('click', sendMessage);
-    } else {
-        console.error("Send button not found!");
+function fetchParticipants(roomId) {
+    fetch(`/api/participants/by-room/${roomId}`)
+        .then(response => response.json())
+        .then(usernames => {
+            updateUserList(usernames);
+        })
+        .catch(error => console.error('Error fetching participants:', error));
+}
+
+function updateUserList(usernames) {
+    const container = document.getElementById('user-list-container');
+    container.innerHTML = '';
+
+    usernames.forEach(username => {
+        const userElement = document.createElement('li');
+        userElement.textContent = username;
+        container.appendChild(userElement);
+    });
+}
+
+function leaveChannel() {
+    if (stompClient && stompClient.connected) {
+        const leaveMessage = {
+            sender: currentUsername,
+            type: 'LEAVE',
+            roomId: currentRoomId
+        };
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(leaveMessage));
     }
 
-    const messageInput = document.getElementById('message-input');
-    if (messageInput) {
-        messageInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    } else {
-        console.error("Message input not found!");
-    }
-});
+    stompClient.disconnect(function () {
+        console.log('Disconnected');
+        window.location.href = '/app/browse-chatrooms.html';
+    });
+}
+

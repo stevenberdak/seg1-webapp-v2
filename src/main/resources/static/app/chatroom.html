@@ -10,8 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
-    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="./css/styles.css" type="text/css">
     <script src="../app/js/chatroom.js" defer></script>
+    <script src="../app/js/auth-status.js"></script>
 </head>
 
 <body class="bg-gray-100 text-gray-800">
@@ -22,28 +23,37 @@
             <a href="/app/create-chatroom.html" class="text-purple-800 font-semibold">Create Channel</a>
             <a href="/app/browse-chatrooms.html" class="text-purple-800 font-semibold">Browse Chatrooms</a>
         </div>
-        <div>
-            <a href="/sign-in.html" class="text-blue-700 font-semibold">Sign-In</a>
-            <a href="/sign-up.html" class="text-blue-700 font-semibold">Sign-Up</a>
+        <div class="flex flex-row justify-center items-center space-x-4">
+            <p id="username-display" class="text-gray-700 font-semibold"><!-- Username placeholder --></p>
+            <button type="button"
+                class="cursor-pointer px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Sign-Out
+            </button>
         </div>
     </nav>
 
     <main>
-        <div class="flex flex-row w-full h-screen bg-gray-100 pt-20">
-            <div class="flex flex-col items-center px-4 space-y-4 h-full">
+        <div class="flex flex-row w-full h-screen bg-gray-100 pt-5">
+            <div class="flex flex-col items-center px-4 pb-10 space-y-4 h-full basis-1/5">
                 <h3 class="text-2xl font-bold text-center">User List</h3>
-                <ul id="user-list-container" class="w-full h-full max-w-md space-y-2">
-                    <!-- User list items will be dynamically added here -->
+                <ul id="user-list-container" class="flex flex-col w-full h-full max-w-md space-y-2 items-center">
+                    <!-- Dynamic user list content -->
                 </ul>
+                <button type="button"
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                    id="leave-button">
+                    Leave
+                </button>
             </div>
-            <div class="flex flex-col items-center justify-center w-full h-full px-4 space-y-4">
+            <div class="flex flex-col items-center justify-center w-full h-full px-4 space-y-4 basis-4/5">
                 <header class="text-center">
                     <h1 id="chatroom-title" class="text-3xl font-bold mb-2"></h1>
                     <h2 id="chatroom-header" class="text-2xl font-bold mb-2"></h2>
                     <h3 id="chatroom-description"></h3>
                 </header>
 
-                <section id="message-container" class="w-full h-full overflow-scroll flex-1 bg-white rounded shadow p-6 space-y-4">
+                <section id="message-container"
+                    class="w-full h-full overflow-scroll flex-1 bg-white rounded shadow p-6 space-y-4">
 
                 </section>
 
