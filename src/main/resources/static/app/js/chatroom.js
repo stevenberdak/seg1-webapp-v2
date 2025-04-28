@@ -2,6 +2,42 @@ let stompClient = null;
 let currentRoomId = null;
 let currentUsername = null;
 
+async function loadMessageHistory() {
+    if (!currentRoomId) return;
+
+    const messageContainer = document.getElementById("message-container");
+    if (!messageContainer) {
+        console.error("Message container not found!");
+        return;
+    }
+    messageContainer.innerHTML = '';
+
+    try {
+        const response = await fetch(`/api/chatrooms/${currentRoomId}/messages`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const history = await response.json();
+
+        history.forEach(message => {
+            // This assumes the DTO has { username: '...', content: '...', timestamp: '...' }
+            showMessage({
+                type: 'CHAT',
+                username: message.username,
+                content: message.content
+            });
+        });
+        console.log("Message history loaded.");
+
+        // Auto-scroll to the bottom after loading history
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+
+    } catch (error) {
+        console.error("Failed to load message history:", error);
+        messageContainer.textContent = "Error loading message history."; // Inform user
+    }
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const params = new URLSearchParams(window.location.search);
     const title = params.get("title");
@@ -49,7 +85,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             // --- Now Connect to WebSocket ---
             if (currentRoomId) {
-                connect(); // Connect ONLY after getting the username
+                // --- Load history *BEFORE* connecting or just after starting connection ---
+                loadMessageHistory().then(() => {
+                     connect(); // Connect ONLY after getting username AND attempting to load history
+                });
             } else {
                 console.error("Room ID is missing from URL parameters.");
             }
