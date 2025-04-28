@@ -1,6 +1,5 @@
 package com.seg1.webapp.websocket.controller;
 
-import com.seg1.webapp.websocket.model.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,19 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import com.seg1.webapp.api.repository.ParticipantRepository;
+import com.seg1.webapp.websocket.model.ChatMessage;
+
 @Component
 public class WebSocketEventListener {
     private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
+    @Autowired
+    private ChatController chatController;
+    @Autowired
+    private ParticipantRepository participantRepository;
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
@@ -23,7 +29,7 @@ public class WebSocketEventListener {
 
         // Retrieve username and room_id stored in the session during 'addUser'
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        String roomId = (String) headerAccessor.getSessionAttributes().get("room_id");
+        Long roomId = (Long) headerAccessor.getSessionAttributes().get("room_id");
 
         if (username != null && roomId != null) {
             logger.info("User Disconnected: Username = {}, Room ID = {}", username, roomId);
@@ -33,6 +39,9 @@ public class WebSocketEventListener {
             chatMessage.setType(ChatMessage.MessageType.LEAVE);
             chatMessage.setUsername(username);
             chatMessage.setRoomId(roomId);
+
+            participantRepository.deleteByUsernameAndChatroomId(username, roomId);
+            chatController.broadcastParticipantList(roomId);
 
             // Broadcast the LEAVE message to the specific room topic
             try {

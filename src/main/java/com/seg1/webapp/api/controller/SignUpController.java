@@ -23,10 +23,6 @@ public class SignUpController {
             @RequestParam String username,
             @RequestParam String password) {
 
-        if (userRepository.findByEmail(email).isPresent()) {
-            return "redirect:/sign-up.html?error=Email+already+in+use";
-        }
-
         if (userRepository.findByUsername(username).isPresent()) {
             return "redirect:/sign-up.html?error=Username+already+exists";
         }

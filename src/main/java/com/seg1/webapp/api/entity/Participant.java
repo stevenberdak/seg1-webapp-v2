@@ -1,9 +1,11 @@
 package com.seg1.webapp.api.entity;
 
-import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "participants")
@@ -12,47 +14,44 @@ public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @CreationTimestamp
-    private LocalDateTime created_at;
 
-    @ManyToOne
-    private Chatroom chatroom;
+    @Column(nullable = false)
+    private String username;
 
-    @OneToOne
-    private User user;
+    @Column(name = "chatroom_id", nullable = false)
+    private Long chatroomId;
 
-    public User getUser() {
-        return user;
+    // Constructors
+    public Participant() {
     }
-    public void setUser(User user) {
-        this.user = user;
-    }
-    private String role;
 
+    public Participant(String username, Long chatroomId) {
+        this.username = username;
+        this.chatroomId = chatroomId;
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+
+    public String getUsername() {
+        return username;
     }
 
-    public String getRole() {
-        return role;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Chatroom getChatroom() {
-        return chatroom;
+    public Long getChatroomId() {
+        return chatroomId;
     }
-    public void setChatroom(Chatroom chatroom) {
-        this.chatroom = chatroom;
-    }
-    public void setRole(String role) {
-        this.role = role;
+
+    public void setChatroomId(Long chatroomId) {
+        this.chatroomId = chatroomId;
     }
 }

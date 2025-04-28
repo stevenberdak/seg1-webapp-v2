@@ -6,10 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>SEG1 Chat App</title>
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/styles.css" type="text/css">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="../app/js/browse-chatrooms.js"></script>
+  <script src="../app/js/auth-status.js"></script>
 </head>
 
 <body>
@@ -19,18 +20,31 @@
       <a href="/app/create-chatroom.html" class="text-purple-800 font-semibold">Create Channel</a>
       <a href="/app/browse-chatrooms.html" class="text-purple-800 font-semibold">Browse Chatrooms</a>
     </div>
-    <div>
-      <p id="username-display" class="text-gray-700 font-semibold">Username</p>
+    <div class="flex flex-row justify-center items-center space-x-4">
+      <p id="username-display" class="text-gray-700 font-semibold"><!-- Username placeholder --></p>
+      <button type="button"
+        class="cursor-pointer px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        Sign-Out
+      </button>
     </div>
   </nav>
   <main>
-    <div class="flex flex-row items-center justify-center w-full h-screen items-start divide-x divide-gray-300">
-      <div class="flex flex-row flex-wrap w-full h-screen justify-start gap-8 pt-24 pb-12 px-12" id="chatroom-list-box">
+    <div class="flex flex-row items-center justify-center h-screen items-start divide-x divide-gray-300">
+      <div class="flex flex-col flex-wrap flex-grow h-screen justify-start gap-8 pt-10 pb-12 px-12 basis-1/4">
+        <h1 class="text-3xl font-bold mb-2">My Chatrooms</h1>
+        <div id="my-chatrooms-list-box">
 
+        </div>
       </div>
-    </div>
+      <div class="flex flex-row flex-wrap w-full h-screen justify-start gap-8 pt-10 pb-12 px-12">
+        <div class="w-full">
+          <h1 class="text-3xl font-bold mb-2">Browse Chatrooms</h1>
+        </div>
+        <ul id="chatrooms-list-box" class="flex flex-row flex-wrap h-full max-w-md items-start justify-start content-start gap-8">
+          <!-- Dynamic chatroom list content -->
+        </ul>
+      </div>
   </main>
-  <script>listChatrooms()</script>
 </body>
 
 </html>

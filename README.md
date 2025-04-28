@@ -40,6 +40,10 @@ java -jar ./target/webapp-0.0.1-SNAPSHOT.jar
 
 ```
 
+### Live version
+
+https://discord.com/channels/1339713681738567682/1339713682434691117/1366279642301988915
+
 ## License
 
 This project is not licensed.
