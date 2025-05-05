@@ -1,6 +1,9 @@
 package com.seg1.webapp.websocket.controller;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -39,43 +42,61 @@ public class ChatController {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    // Variables for reentrant lock setup
+    private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ReentrantLock lock = new ReentrantLock();
+
     // Handles sending a chat message
     @MessageMapping("/chat.sendMessage")
     @Transactional
     public void sendMessage(@Payload ChatMessage chatMessage) {
-        // --- Save the message to the database BEFORE broadcasting ---
-        try {
-            // Find the user - handle case where user might not exist
-            User user = userRepository.findByUsername(chatMessage.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found: " + chatMessage.getUsername()));
+        executor.submit(() -> {
+            lock.lock(); // Acquire the lock
+            try {
+                // --- Save the message to the database BEFORE broadcasting ---
+                try {
+                    // Find the user - handle case where user might not exist
+                    User user = userRepository.findByUsername(chatMessage.getUsername())
+                            .orElseThrow(() -> new RuntimeException("User not found: " + chatMessage.getUsername()));
 
-            // Find the chatroom - handle case where room might not exist
-            Long chatroomId = chatMessage.getRoomId();
-            Chatroom chatroom = chatroomRepository.findById(chatroomId)
-                    .orElseThrow(() -> new RuntimeException("Chatroom not found: " + chatMessage.getRoomId()));
+                    // Find the chatroom - handle case where room might not exist
+                    Long chatroomId = chatMessage.getRoomId();
+                    Chatroom chatroom = chatroomRepository.findById(chatroomId)
+                            .orElseThrow(() -> new RuntimeException("Chatroom not found: " + chatMessage.getRoomId()));
 
-            // Create the Message entity
-            Message messageEntity = new Message();
-            messageEntity.setContent(chatMessage.getContent());
-            messageEntity.setUserId(user.getId()); // Store user ID
-            messageEntity.setChatroom(chatroom); // Set the relationship
+                    // Create the Message entity
+                    Message messageEntity = new Message();
+                    messageEntity.setContent(chatMessage.getContent());
+                    messageEntity.setUserId(user.getId()); // Store user ID
+                    messageEntity.setChatroom(chatroom); // Set the relationship
 
-            // Save the message
-            messageRepository.save(messageEntity);
-            logger.info(">>> Saved message from {} to room {}", chatMessage.getUsername(), chatMessage.getRoomId());
+                    // Save the message
+                    messageRepository.save(messageEntity);
+                    logger.info(">>> Saved message from {} to room {}", chatMessage.getUsername(),
+                            chatMessage.getRoomId());
 
-        } catch (NumberFormatException e) {
-            logger.error("!!! Invalid Room ID format: {}", chatMessage.getRoomId());
-            return;
-        } catch (Exception e) {
-            logger.error("!!! Error saving message for user {} in room {}: {}",
-                    chatMessage.getUsername(), chatMessage.getRoomId(), e.getMessage(), e);
-            return;
-        }
+                } catch (NumberFormatException e) {
+                    logger.error("!!! Invalid Room ID format: {}", chatMessage.getRoomId());
+                    return;
+                } catch (Exception e) {
+                    logger.error("!!! Error saving message for user {} in room {}: {}",
+                            chatMessage.getUsername(), chatMessage.getRoomId(), e.getMessage(), e);
+                    return;
+                }
 
-        // Broadcast the message via WebSocket (only if saving was successful)
-        messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
-        logger.info(">>> Broadcasted message from {} to /topic/{}", chatMessage.getUsername(), chatMessage.getRoomId());
+                // Broadcast the message via WebSocket (only if saving was successful)
+                messagingTemplate.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
+                logger.info(">>> Broadcasted message from {} to /topic/{}", chatMessage.getUsername(),
+                        chatMessage.getRoomId());
+            } catch (Exception e) {
+                logger.error("!!! Error processing message for user {} in room {}: {}",
+                        chatMessage.getUsername(), chatMessage.getRoomId(), e.getMessage(), e);
+                e.printStackTrace();
+            } finally {
+                lock.unlock(); // Always unlock in a finally block
+            }
+        });
+
     }
 
     // Handles when a user joins and stores their username

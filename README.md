@@ -31,9 +31,7 @@ mvnw.cmd package -f pom.xml
 
 ### Executing program
 
-Start the program using the jar file created in the previous step
-
-Note: In Eclipse you can double-click the file.
+Using external terminal, start the program using the jar file created in the previous step
 
 ```
 java -jar ./target/webapp-0.0.1-SNAPSHOT.jar
