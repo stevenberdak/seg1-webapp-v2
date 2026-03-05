@@ -38,12 +38,6 @@ java -jar ./target/webapp-0.0.1-SNAPSHOT.jar
 
 ```
 
-### Live version
-
-http://ec2-54-197-20-205.compute-1.amazonaws.com/
-
-Note: This may change periodically (and will need to be updated). If it does not work then please let me know.
-
 ## License
 
 This project is not licensed.
