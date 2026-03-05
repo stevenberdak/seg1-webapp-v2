@@ -1,6 +1,6 @@
-# SEG1-WEBAPP-V2
+# ChatApp
 
-Chat application for CS4800 Software Engineering, CSU Stanislaus, Spring 2025 semester.
+Chat application to meet course requirements for CS4800 Software Engineering, CSU Stanislaus, Spring 2025 semester.
 
 ## Description
 
